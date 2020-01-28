@@ -2,50 +2,237 @@
 {
     using System;
     using System.Collections.Generic;
-    using Api.Controllers;
+    using FakeItEasy;
+    using Moonpig.PostOffice.Api.Services;
+    using Moonpig.PostOffice.Data;
     using Shouldly;
     using Xunit;
 
     public class PostOfficeTests
     {
-        [Fact]
-        public void OneProductWithLeadTimeOfOneDay()
+        private readonly IDispatchService dispatchService;
+        private readonly IProductService productService;
+        private readonly ISupplierService supplierService;
+
+        public PostOfficeTests()
         {
-            DespatchDateController controller = new DespatchDateController();
-            var date = controller.Get(new List<int>() {1}, DateTime.Now);
-            date.Date.Date.ShouldBe(DateTime.Now.Date.AddDays(1));
+            productService = A.Fake<IProductService>();
+            supplierService = A.Fake<ISupplierService>();
+            dispatchService = new DispatchService(productService, supplierService);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        public void DispatchDateIsEqualToTodayPlusLeadTime_GivenOneProduct_AndTodayIsAMonday(int leadTime)
+        {
+            var productId = 1;
+            var supplierId = 1;
+            var today = new DateTime(2018, 1, 1);
+
+            var fakeProduct = new Product
+            {
+                ProductId = productId,
+                SupplierId = supplierId,
+            };
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = dispatchService.GetDispatchDate(new List<int>(){ productId }, today);
+
+            date.Date.Date.ShouldBe(today.Date.AddDays(fakeSupplier.LeadTime));
+        }
+
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData(1, 3)]
+        [InlineData(2, 4)]
+        [InlineData(3, 4)]
+        public void DispatchDateIsEqualToTodayPlusLargestLeadTime_GivenTwoProducts(int smallerLeadTime, int largerLeadTime)
+        {
+            var productOneId = 1;
+            var productTwoId = 2;
+            var supplierOneId = 1;
+            var supplierTwoId = 1;
+            var today = new DateTime(2018, 1, 1);
+
+            var fakeProductOne = new Product
+            {
+                ProductId = productOneId,
+                SupplierId = supplierOneId,
+            };
+
+            var fakeProductTwo = new Product
+            {
+                ProductId = productTwoId,
+                SupplierId = supplierTwoId,
+            };
+
+            var fakeSupplierOne = new Supplier
+            {
+                SupplierId = supplierOneId,
+                LeadTime = smallerLeadTime
+            };
+
+            var fakeSupplierTwo = new Supplier
+            {
+                SupplierId = supplierTwoId,
+                LeadTime = largerLeadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productOneId)).Returns(fakeProductOne);
+            A.CallTo(() => productService.GetProductById(productTwoId)).Returns(fakeProductTwo);
+
+            A.CallTo(() => supplierService.GetSupplierById(supplierOneId)).Returns(fakeSupplierOne);
+            A.CallTo(() => supplierService.GetSupplierById(supplierTwoId)).Returns(fakeSupplierTwo);
+
+            var date = dispatchService.GetDispatchDate(new List<int>() { productOneId, productTwoId }, today);
+
+            date.Date.Date.ShouldBe(today.Date.AddDays(fakeSupplierTwo.LeadTime));
         }
 
         [Fact]
-        public void OneProductWithLeadTimeOfTwoDay()
+        public void DispatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsOneDay()
         {
-            DespatchDateController controller = new DespatchDateController();
-            var date = controller.Get(new List<int>() { 2 }, DateTime.Now);
-            date.Date.Date.ShouldBe(DateTime.Now.Date.AddDays(2));
+            var productId = 1;
+            var supplierId = 1;
+            var leadTime = 1;
+            var today = new DateTime(2018, 1, 5);
+
+            var fakeProduct = new Product
+            {
+                ProductId = productId,
+                SupplierId = supplierId,
+            };
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+
+            date.Date.Date.ShouldBe(new DateTime(2018, 1, 8));
         }
 
         [Fact]
-        public void OneProductWithLeadTimeOfThreeDay()
+        public void DispatchDateIsTuesday_GivenTodayIsSaturday_WhenLeadTimeIsOneDay()
         {
-            DespatchDateController controller = new DespatchDateController();
-            var date = controller.Get(new List<int>() { 3 }, DateTime.Now);
-            date.Date.Date.ShouldBe(DateTime.Now.Date.AddDays(3));
+            var productId = 1;
+            var supplierId = 1;
+            var leadTime = 1;
+            var today = new DateTime(2018, 1, 6);
+
+            var fakeProduct = new Product
+            {
+                ProductId = productId,
+                SupplierId = supplierId,
+            };
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+
+            date.Date.Date.ShouldBe(new DateTime(2018, 1, 9));
         }
 
         [Fact]
-        public void SaturdayHasExtraTwoDays()
+        public void DispatchDateIsTuesday_GivenTodayIsSunday_WhenLeadTimeIsOneDay()
         {
-            DespatchDateController controller = new DespatchDateController();
-            var date = controller.Get(new List<int>() { 1 }, new DateTime(2018,1,26));
-            date.Date.ShouldBe(new DateTime(2018, 1, 26).Date.AddDays(3));
+            var productId = 1;
+            var supplierId = 1;
+            var leadTime = 1;
+            var today = new DateTime(2018, 1, 7);
+
+            var fakeProduct = new Product
+            {
+                ProductId = productId,
+                SupplierId = supplierId,
+            };
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+
+            date.Date.Date.ShouldBe(new DateTime(2018, 1, 9));
         }
 
         [Fact]
-        public void SundayHasExtraDay()
+        public void DispatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsSixDays()
         {
-            DespatchDateController controller = new DespatchDateController();
-            var date = controller.Get(new List<int>() { 3 }, new DateTime(2018, 1, 25));
-            date.Date.ShouldBe(new DateTime(2018, 1, 25).Date.AddDays(4));
+            var productId = 1;
+            var supplierId = 1;
+            var leadTime = 6;
+            var today = new DateTime(2018, 1, 5);
+
+            var fakeProduct = new Product
+            {
+                ProductId = productId,
+                SupplierId = supplierId,
+            };
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+
+            date.Date.Date.ShouldBe(new DateTime(2018, 1, 15));
+        }
+
+        [Fact]
+        public void DispatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsElevenDays()
+        {
+            var productId = 1;
+            var supplierId = 1;
+            var leadTime = 11;
+            var today = new DateTime(2018, 1, 5);
+
+            var fakeProduct = new Product
+            {
+                ProductId = productId,
+                SupplierId = supplierId,
+            };
+
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+
+            date.Date.Date.ShouldBe(new DateTime(2018, 1, 22));
         }
     }
 }

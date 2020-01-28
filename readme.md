@@ -101,12 +101,37 @@ document.
 Q1. What 'code smells' / anti-patterns did you find in the existing 
 	implemention of part 1 & 2?
 
-Q2. What best pracices have you used while implementing your solution?
+Q2. What best practices have you used while implementing your solution?
 
 Q3. What further steps would you take to improve the solution given more time?
 
 Q4. What's a technology that you're excited about and where do you see this 
     being applicable? (Your answer does not have to be related to this problem)
+	
+## Answers
+Q1.	No consistency in If Statement format i.e. one line, two lines with no brackets, mutli-line with brackets used
+	Refactor of if statements for checking for Saturday + Sunday
+	Multiple return statements in Controller
+	Logic contained within the Controller
+	Assumption of Datebase Data in the Unit Tests
+	Using DateTime.Now in Unit Tests
+	Unneccessary global declared variable
+	Mispelling of Dispatch (not necessarily a Code Smell, but incorrect naming can lead to future mistakes)
+
+Q2. Interfaces - Segregated so that only classes that implement all features use them
+	Abstracting logic into seperate service
+	Creating services to handle a Single responsibility
+	Code consistency
+	Unit Testing using Mocked requests to reduce relying on database data
+	Dependency injection
+	Extensions to DateTime object for future sustainability
+	Comments for maintainability where code isn't necessarily as understandable
+
+Q3. What further steps would you take to improve the solution given more time?
+	
+
+Q4. What's a technology that you're excited about and where do you see this being applicable? (Your answer does not have to be related to this problem)
+	
 
 ## Request and Response Examples
 
