@@ -109,13 +109,14 @@ Q4. What's a technology that you're excited about and where do you see this
     being applicable? (Your answer does not have to be related to this problem)
 	
 ## Answers
-Q1.	* Unneccessary global declared variable of maxLeadTime
-	* Unclear variable naming
-	* Logic contained within the Controller and not separated into scalable services
-	* No consistency in If Statement format i.e. one line, two lines with no brackets, mutli-line with brackets used
-	* Assumption of Datebase Data in the Unit Tests
-	* Using DateTime.Now in Unit Tests, when different logic applies depending on today's date
-	* API reliant on the name of the Controller
+**Question 1**
+* Unneccessary global declared variable of maxLeadTime
+* Unclear variable naming
+* Logic contained within the Controller and not separated into scalable services
+* No consistency in If Statement format i.e. one line, two lines with no brackets, mutli-line with brackets used
+* Assumption of Datebase Data in the Unit Tests
+* Using DateTime.Now in Unit Tests, when different logic applies depending on today's date
+* API reliant on the name of the Controller
 
 Q2. * Interfaces - segregated so that only classes that implement their features use them
 	* Abstracting core logic into seperate service, so that no logic resides in the controller itself. Also adding to scalability of the code
