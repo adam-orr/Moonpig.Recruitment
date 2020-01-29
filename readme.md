@@ -118,24 +118,26 @@ Q4. What's a technology that you're excited about and where do you see this
 * Using DateTime.Now in Unit Tests, when different logic applies depending on today's date
 * API reliant on the name of the Controller
 
-Q2. * Interfaces - segregated so that only classes that implement their features use them
-	* Abstracting core logic into seperate service, so that no logic resides in the controller itself. Also adding to scalability of the code
-	* Creating services to handle a single responsibility
-	* Refactor of conditionals to allow for concise code
-	* Code structure consistency - equal spacing and formatting for similiar code (i.e. List creation, IF statements etc.)
-	* Unit Testing using Mocked requests to reduce relying on database data
-	* Dependency injection
-	* Specified API path - to only allow for API calls to the given API to return the requested result
-	* Extensions to DateTime object for future scalability
-	* Comments for maintainability where code isn't necessarily as understandable
-	* Naming variables so that they are understood to what they contain without checking the code flow
+**Question 2**
+* Interfaces - segregated so that only classes that implement their features use them
+* Abstracting core logic into seperate service, so that no logic resides in the controller itself. Also adding to scalability of the code
+* Creating services to handle a single responsibility
+* Refactor of conditionals to allow for concise code
+* Code structure consistency - equal spacing and formatting for similiar code (i.e. List creation, IF statements etc.)
+* Unit Testing using Mocked requests to reduce relying on database data
+* Dependency injection
+* Specified API path - to only allow for API calls to the given API to return the requested result
+* Extensions to DateTime object for future scalability
+* Comments for maintainability where code isn't necessarily as understandable
+* Naming variables so that they are understood to what they contain without checking the code flow
 
-Q3. * As some suppliers may work on weekends, or even may not work on certain days of the week; additional data could be added to the database for each supplier to dictate which days they did/did not work and calculate an appropriate despatch date accordingly.
-	* Add an API to allow adding and updating of Products and Suppliers into the database.
-	* Add implementation to also take into account Bank Holidays when calculating the despatch date
+**Question 3**
+* As some suppliers may work on weekends, or even may not work on certain days of the week; additional data could be added to the database for each supplier to dictate which days they did/did not work and calculate an appropriate despatch date accordingly.
+* Add an API to allow adding and updating of Products and Suppliers into the database.
+* Add implementation to also take into account Bank Holidays when calculating the despatch date
 	
-Q4. What's a technology that you're excited about and where do you see this being applicable? (Your answer does not have to be related to this problem)
-	* Artificial Intelligence - very versatile technology, can be used in countless different ways throughout software development. From machine learning to help solve complex problems to be able to predict a user's actions and providing the best possible experience. AI can be used in any industry and environment as it provides the tools available for the task that is needed.
+**Question 4**
+* Artificial Intelligence - very versatile technology, can be used in countless different ways throughout software development. From machine learning to help solve complex problems to be able to predict a user's actions and providing the best possible experience. AI can be used in any industry and environment as it provides the tools available for the task that is needed.
 	
 
 ## Request and Response Examples
