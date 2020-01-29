@@ -19,7 +19,7 @@ namespace Moonpig.PostOffice.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddTransient<IDispatchService, DispatchService>();
+            services.AddTransient<IDespatchService, DespatchService>();
             services.AddTransient<ISupplierService, SupplierService>();
             services.AddTransient<IProductService, ProductService>();
         }

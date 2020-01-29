@@ -10,7 +10,7 @@
 
     public class PostOfficeTests
     {
-        private readonly IDispatchService dispatchService;
+        private readonly IDespatchService despatchService;
         private readonly IProductService productService;
         private readonly ISupplierService supplierService;
 
@@ -18,7 +18,7 @@
         {
             productService = A.Fake<IProductService>();
             supplierService = A.Fake<ISupplierService>();
-            dispatchService = new DispatchService(productService, supplierService);
+            despatchService = new DespatchService(productService, supplierService);
         }
 
         [Theory]
@@ -26,7 +26,7 @@
         [InlineData(2)]
         [InlineData(3)]
         [InlineData(4)]
-        public void DispatchDateIsEqualToTodayPlusLeadTime_GivenOneProduct_AndTodayIsAMonday(int leadTime)
+        public void DespatchDateIsEqualToTodayPlusLeadTime_GivenOneProduct_AndTodayIsAMonday(int leadTime)
         {
             var productId = 1;
             var supplierId = 1;
@@ -46,7 +46,7 @@
             A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
             A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
 
-            var date = dispatchService.GetDispatchDate(new List<int>(){ productId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>(){ productId }, today);
 
             date.Date.Date.ShouldBe(today.Date.AddDays(fakeSupplier.LeadTime));
         }
@@ -56,7 +56,7 @@
         [InlineData(1, 3)]
         [InlineData(2, 4)]
         [InlineData(3, 4)]
-        public void DispatchDateIsEqualToTodayPlusLargestLeadTime_GivenTwoProducts(int smallerLeadTime, int largerLeadTime)
+        public void DespatchDateIsEqualToTodayPlusLargestLeadTime_GivenTwoProducts(int smallerLeadTime, int largerLeadTime)
         {
             var productOneId = 1;
             var productTwoId = 2;
@@ -94,13 +94,13 @@
             A.CallTo(() => supplierService.GetSupplierById(supplierOneId)).Returns(fakeSupplierOne);
             A.CallTo(() => supplierService.GetSupplierById(supplierTwoId)).Returns(fakeSupplierTwo);
 
-            var date = dispatchService.GetDispatchDate(new List<int>() { productOneId, productTwoId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>() { productOneId, productTwoId }, today);
 
             date.Date.Date.ShouldBe(today.Date.AddDays(fakeSupplierTwo.LeadTime));
         }
 
         [Fact]
-        public void DispatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsOneDay()
+        public void DespatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsOneDay()
         {
             var productId = 1;
             var supplierId = 1;
@@ -121,13 +121,13 @@
             A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
             A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
 
-            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>() { productId }, today);
 
             date.Date.Date.ShouldBe(new DateTime(2018, 1, 8));
         }
 
         [Fact]
-        public void DispatchDateIsTuesday_GivenTodayIsSaturday_WhenLeadTimeIsOneDay()
+        public void DespatchDateIsTuesday_GivenTodayIsSaturday_WhenLeadTimeIsOneDay()
         {
             var productId = 1;
             var supplierId = 1;
@@ -148,13 +148,13 @@
             A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
             A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
 
-            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>() { productId }, today);
 
             date.Date.Date.ShouldBe(new DateTime(2018, 1, 9));
         }
 
         [Fact]
-        public void DispatchDateIsTuesday_GivenTodayIsSunday_WhenLeadTimeIsOneDay()
+        public void DespatchDateIsTuesday_GivenTodayIsSunday_WhenLeadTimeIsOneDay()
         {
             var productId = 1;
             var supplierId = 1;
@@ -175,13 +175,13 @@
             A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
             A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
 
-            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>() { productId }, today);
 
             date.Date.Date.ShouldBe(new DateTime(2018, 1, 9));
         }
 
         [Fact]
-        public void DispatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsSixDays()
+        public void DespatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsSixDays()
         {
             var productId = 1;
             var supplierId = 1;
@@ -202,13 +202,13 @@
             A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
             A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
 
-            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>() { productId }, today);
 
             date.Date.Date.ShouldBe(new DateTime(2018, 1, 15));
         }
 
         [Fact]
-        public void DispatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsElevenDays()
+        public void DespatchDateIsMonday_GivenTodayIsFriday_WhenLeadTimeIsElevenDays()
         {
             var productId = 1;
             var supplierId = 1;
@@ -230,9 +230,31 @@
             A.CallTo(() => productService.GetProductById(productId)).Returns(fakeProduct);
             A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
 
-            var date = dispatchService.GetDispatchDate(new List<int>() { productId }, today);
+            var date = despatchService.GetDespatchDate(new List<int>() { productId }, today);
 
             date.Date.Date.ShouldBe(new DateTime(2018, 1, 22));
+        }
+
+        [Fact]
+        public void NoDespatchDateReturned_GivenProductIdDoesNotExist()
+        {
+            var productId = -1;
+            var supplierId = 1;
+            var leadTime = 3;
+            var today = new DateTime(2018, 1, 1);
+
+            var fakeSupplier = new Supplier
+            {
+                SupplierId = supplierId,
+                LeadTime = leadTime
+            };
+
+            A.CallTo(() => productService.GetProductById(productId)).Returns(null);
+            A.CallTo(() => supplierService.GetSupplierById(supplierId)).Returns(fakeSupplier);
+
+            var date = despatchService.GetDespatchDate(new List<int>() { productId }, today);
+
+            Assert.Null(date);
         }
     }
 }

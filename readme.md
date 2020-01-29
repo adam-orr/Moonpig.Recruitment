@@ -72,7 +72,7 @@ on the weekend are despatched on the following Monday.
 
 The Moonpig post office is still getting complaints... It turns out suppliers 
 don't work during the weekend as well, i.e. if an order is received on the 
-Friday with a lead time of 2 days, Moonpig would receive and dispatch on the 
+Friday with a lead time of 2 days, Moonpig would receive and despatch on the 
 Tuesday.
 
 Modify the existing code to ensure that any orders that would have been 
@@ -109,28 +109,32 @@ Q4. What's a technology that you're excited about and where do you see this
     being applicable? (Your answer does not have to be related to this problem)
 	
 ## Answers
-Q1.	No consistency in If Statement format i.e. one line, two lines with no brackets, mutli-line with brackets used
-	Refactor of if statements for checking for Saturday + Sunday
-	Multiple return statements in Controller
-	Logic contained within the Controller
-	Assumption of Datebase Data in the Unit Tests
-	Using DateTime.Now in Unit Tests
-	Unneccessary global declared variable
-	Mispelling of Dispatch (not necessarily a Code Smell, but incorrect naming can lead to future mistakes)
+Q1.	* Unneccessary global declared variable of maxLeadTime
+	* Unclear variable naming
+	* Logic contained within the Controller and not separated into scalable services
+	* No consistency in If Statement format i.e. one line, two lines with no brackets, mutli-line with brackets used
+	* Assumption of Datebase Data in the Unit Tests
+	* Using DateTime.Now in Unit Tests, when different logic applies depending on today's date
+	* API reliant on the name of the Controller
 
-Q2. Interfaces - Segregated so that only classes that implement all features use them
-	Abstracting logic into seperate service
-	Creating services to handle a Single responsibility
-	Code consistency
-	Unit Testing using Mocked requests to reduce relying on database data
-	Dependency injection
-	Extensions to DateTime object for future sustainability
-	Comments for maintainability where code isn't necessarily as understandable
+Q2. * Interfaces - segregated so that only classes that implement their features use them
+	* Abstracting core logic into seperate service, so that no logic resides in the controller itself. Also adding to scalability of the code
+	* Creating services to handle a single responsibility
+	* Refactor of conditionals to allow for concise code
+	* Code structure consistency - equal spacing and formatting for similiar code (i.e. List creation, IF statements etc.)
+	* Unit Testing using Mocked requests to reduce relying on database data
+	* Dependency injection
+	* Specified API path - to only allow for API calls to the given API to return the requested result
+	* Extensions to DateTime object for future scalability
+	* Comments for maintainability where code isn't necessarily as understandable
+	* Naming variables so that they are understood to what they contain without checking the code flow
 
-Q3. What further steps would you take to improve the solution given more time?
+Q3. * As some suppliers may work on weekends, or even may not work on certain days of the week; additional data could be added to the database for each supplier to dictate which days they did/did not work and calculate an appropriate despatch date accordingly.
+	* Add an API to allow adding and updating of Products and Suppliers into the database.
+	* Add implementation to also take into account Bank Holidays when calculating the despatch date
 	
-
 Q4. What's a technology that you're excited about and where do you see this being applicable? (Your answer does not have to be related to this problem)
+	* Artificial Intelligence - very versatile technology, can be used in countless different ways throughout software development. From machine learning to help solve complex problems to be able to predict a user's actions and providing the best possible experience. AI can be used in any industry and environment as it provides the tools available for the task that is needed.
 	
 
 ## Request and Response Examples

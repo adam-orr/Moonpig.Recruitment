@@ -7,19 +7,19 @@
     using Moonpig.PostOffice.Api.Services;
 
     [Route("api/DespatchDate")]
-    public class DispatchDateController : Controller
+    public class DespatchDateController : Controller
     {
-        private readonly IDispatchService dispatchService;
+        private readonly IDespatchService despatchService;
 
-        public DispatchDateController(IDispatchService dispatchService)
+        public DespatchDateController(IDespatchService despatchService)
         {
-            this.dispatchService = dispatchService;
+            this.despatchService = despatchService;
         }
 
         [HttpGet]
-        public DispatchDate Get(List<int> productIds, DateTime orderDate)
+        public DespatchDate Get(List<int> productIds, DateTime orderDate)
         {
-            return dispatchService.GetDispatchDate(productIds, orderDate);
+            return despatchService.GetDespatchDate(productIds, orderDate);
         }
     }
 }

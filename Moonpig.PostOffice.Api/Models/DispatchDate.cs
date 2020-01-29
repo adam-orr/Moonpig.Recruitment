@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class DispatchDate
+    public class DespatchDate
     {
         public DateTime Date { get; set; }
     }

@@ -6,23 +6,23 @@ using System.Collections.Generic;
 
 namespace Moonpig.PostOffice.Api.Services
 {
-    public interface IDispatchService
+    public interface IDespatchService
     {
-        DispatchDate GetDispatchDate(List<int> ProductIds, DateTime orderDate);
+        DespatchDate GetDespatchDate(List<int> ProductIds, DateTime orderDate);
     }
 
-    public class DispatchService : IDispatchService
+    public class DespatchService : IDespatchService
     {
         private readonly IProductService productService;
         private readonly ISupplierService supplierService;
 
-        public DispatchService(IProductService productService, ISupplierService supplierService)
+        public DespatchService(IProductService productService, ISupplierService supplierService)
         {
             this.productService = productService;
             this.supplierService = supplierService;
         }
 
-        public DispatchDate GetDispatchDate(List<int> productIds, DateTime orderDate)
+        public DespatchDate GetDespatchDate(List<int> productIds, DateTime orderDate)
         {
             if ((orderDate.DayOfWeek == DayOfWeek.Saturday) || (orderDate.DayOfWeek == DayOfWeek.Sunday))
             {
@@ -35,7 +35,14 @@ namespace Moonpig.PostOffice.Api.Services
             {
                 DbContext dbContext = new DbContext();
 
-                var supplierId = productService.GetProductById(Id).SupplierId;
+                var product = productService.GetProductById(Id);
+
+                if(product == null)
+                {
+                    return null;
+                }
+
+                var supplierId = product.SupplierId;
                 var leadTime = supplierService.GetSupplierById(supplierId).LeadTime;
 
                 if (orderDate.AddWorkdays(leadTime) > maxLeadTime)
@@ -44,18 +51,18 @@ namespace Moonpig.PostOffice.Api.Services
                 }
             }
 
-            var dispatchDate = new DispatchDate();
+            var despatchDate = new DespatchDate();
 
             if ((maxLeadTime.DayOfWeek == DayOfWeek.Saturday) || (maxLeadTime.DayOfWeek == DayOfWeek.Sunday))
             {
-                dispatchDate.Date = maxLeadTime.GetNextWorkDay();
+                despatchDate.Date = maxLeadTime.GetNextWorkDay();
             }
             else
             {
-                dispatchDate.Date = maxLeadTime;
+                despatchDate.Date = maxLeadTime;
             }
 
-            return dispatchDate;
+            return despatchDate;
         }
     }
 }
